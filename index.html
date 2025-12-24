@@ -4,25 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Felix Navidad Card</title>
-    <link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:700&display=swap" rel="stylesheet">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@700&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --pastel-red: #ffadad;
-            /* Màu đỏ Giáng sinh nổi bật */
-            --christmas-red: #d90429; 
-            --gold: #f9c74f;
+            --christmas-red: #d90429;
         }
 
         body, html {
             margin: 0;
             padding: 0;
-            height: 100dvh;
+            height: 100dvh; /* Dynamic viewport height cho Safari */
             display: flex;
             justify-content: center;
             align-items: center;
             background-color: #fceef0;
-            font-family: sans-serif;
+            /* Đảm bảo font được áp dụng toàn trang */
+            font-family: 'Mountains of Christmas', cursive, sans-serif;
             overflow: hidden;
         }
 
@@ -33,70 +35,73 @@
             width: 100%;
         }
 
-        .video-box {
+        .media-box {
             position: relative;
-            width: 90vw;
-            max-width: 400px;
+            width: 85vw;
+            max-width: 380px;
             aspect-ratio: 1 / 1;
-            border-radius: 20px;
+            border-radius: 25px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            background: #000;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+            background: #fff;
         }
 
-        video {
+        /* GIF Styling */
+        .media-content {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
         }
 
-        /* Chữ Felix Navidad!! với hiệu ứng Wipe */
+        /* Chữ Felix Navidad!! với font Mountains of Christmas */
         #greeting-text {
             position: absolute;
             top: 10%;
-            left: 5%;
-            font-family: 'Mountains of Christmas', cursive;
-            font-size: 2.5rem;
-            /* Màu đỏ rực rỡ, có đổ bóng trắng để nổi bật trên mọi nền video */
+            left: 8%;
+            /* Cố định font-family cho Safari */
+            font-family: 'Mountains of Christmas', cursive !important;
+            font-size: 2.6rem;
             color: var(--christmas-red);
-            text-shadow: 2px 2px 0px #fff, -1px -1px 0px #fff, 1px -1px 0px #fff, -1px 1px 0px #fff;
+            /* Đổ bóng trắng dày để nổi bật trên GIF */
+            text-shadow: 2px 2px 0px #fff, -2px -2px 0px #fff, 2px -2px 0px #fff, -2px 2px 0px #fff, 0px 4px 10px rgba(0,0,0,0.2);
             transform: rotate(-15deg);
             z-index: 10;
             pointer-events: none;
             white-space: nowrap;
 
-            /* Trạng thái ban đầu cho hiệu ứng Wipe từ trái sang */
+            /* Hiệu ứng Wipe */
             clip-path: inset(0 100% 0 0); 
             opacity: 0;
-            transition: clip-path 1.5s ease-out, opacity 0.5s ease-out;
+            transition: clip-path 1.5s ease-out, opacity 0.3s ease-out;
         }
 
-        /* Kích hoạt hiệu ứng Wipe */
         #greeting-text.show {
             clip-path: inset(0 0 0 0);
             opacity: 1;
         }
 
+        /* Nút Pill Pastel */
         .gift-btn {
-            margin-top: 30px;
-            padding: 15px 40px;
-            font-size: 1.1rem;
-            font-weight: bold;
+            margin-top: 35px;
+            padding: 18px 45px;
+            font-size: 1.2rem;
+            font-weight: 700;
             color: white;
             background-color: var(--pastel-red);
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 5px 15px rgba(255, 173, 173, 0.4);
+            box-shadow: 0 8px 20px rgba(255, 173, 173, 0.4);
             animation: pulse 2s infinite;
+            /* Loại bỏ màu xám khi chạm trên iPhone */
             -webkit-tap-highlight-color: transparent;
-            z-index: 20;
+            font-family: inherit;
         }
 
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            50% { transform: scale(1.06); }
             100% { transform: scale(1); }
         }
 
@@ -107,14 +112,15 @@
 </head>
 <body>
 
-    <audio id="bg-music" src="feliz-navidad.mp3" loop></audio>
+    <audio id="bg-music" src="feliz-navidad.mp3" loop preload="auto"></audio>
 
     <div class="container">
-        <div class="video-box">
+        <div class="media-box">
             <div id="greeting-text">Felix Navidad!!</div>
 
-            <video id="vid2" src="felix-navidad-vid2.mp4" loop muted playsinline autoplay></video>
-            <video id="vid1" src="felix-navidad-vid1.mp4" loop playsinline class="hidden"></video>
+            <img id="gif2" src="felix-navidad-vid2.gif" class="media-content" alt="Christmas vibe">
+            
+            <img id="gif1" src="felix-navidad-vid1.gif" class="media-content hidden" alt="Gift opening">
         </div>
 
         <button id="gift-btn" class="gift-btn">ấn để nhận quà</button>
@@ -122,24 +128,31 @@
 
     <script>
         const btn = document.getElementById('gift-btn');
-        const vid1 = document.getElementById('vid1');
-        const vid2 = document.getElementById('vid2');
+        const gif1 = document.getElementById('gif1');
+        const gif2 = document.getElementById('gif2');
         const music = document.getElementById('bg-music');
         const text = document.getElementById('greeting-text');
 
-        btn.addEventListener('click', () => {
-            vid2.pause();
-            vid2.classList.add('hidden');
+        btn.addEventListener('click', function() {
+            // Đổi GIF
+            gif2.classList.add('hidden');
+            gif1.classList.remove('hidden');
 
-            vid1.classList.remove('hidden');
-            vid1.play().catch(e => console.log("Play error:", e));
+            // Chơi nhạc (Safari cho phép sau khi user tương tác)
+            music.play().catch(e => console.log("Audio play blocked"));
 
-            music.play();
-
-            // Kích hoạt hiệu ứng Wipe từ trái sang
+            // Hiệu ứng Wipe chữ
             text.classList.add('show');
 
-            btn.classList.add('hidden');
+            // Ẩn nút
+            this.style.display = 'none';
+        });
+
+        // Đảm bảo font được render lại trên Safari nếu bị lag
+        window.addEventListener('load', () => {
+            document.fonts.ready.then(() => {
+                console.log('Fonts loaded');
+            });
         });
     </script>
 </body>
